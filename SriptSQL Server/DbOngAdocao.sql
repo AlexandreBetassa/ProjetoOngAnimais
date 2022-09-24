@@ -50,3 +50,4 @@ uf varchar(3) not null
 
 foreign key (cpf) references pessoa(cpf)
 );
+
