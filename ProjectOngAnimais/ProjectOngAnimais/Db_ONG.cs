@@ -56,36 +56,73 @@ namespace ProjectOngAnimais
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                using (SqlDataReader r = cmd.ExecuteReader())
+                SqlDataReader r = cmd.ExecuteReader();
+
+                if (!r.HasRows)
                 {
-                    if (!r.HasRows)
-                    {
-                        Console.WriteLine("Usuário não localizado!!!\nOperação cancelada...");
-                        conn.Close();
-                        Utils.Pause();
-                        return false;
-                    }
-                    else
-                    {
-                        while (r.Read())
-                        {
-                            Console.WriteLine($"Nome: {r.GetString(1)}");
-                            Console.WriteLine($"CPF: {r.GetString(0)}");
-                            Console.WriteLine($"Sexo: {r.GetString(2)}");
-                            Console.WriteLine($"Tel: {r.GetString(3)}");
-                            Console.WriteLine($"Endereço: {r.GetString(4)}");
-                            Console.WriteLine($"Data de nascimento: {r.GetDateTime(5).ToShortDateString()}");
-                            Console.WriteLine();
-                        }
-                        conn.Close();
-                        return true;
-                    }
+                    Console.WriteLine("Usuário não localizado!!!\nOperação cancelada...");
+                    conn.Close();
+                    Utils.Pause();
+                    return false;
                 }
+
+                while (r.Read())
+                {
+                    Console.WriteLine($"Nome: {r.GetString(1)}");
+                    Console.WriteLine($"CPF: {r.GetString(0)}");
+                    Console.WriteLine($"Sexo: {r.GetString(2)}");
+                    Console.WriteLine($"Tel: {r.GetString(3)}");
+                    Console.WriteLine($"Endereço: {r.GetString(4)}");
+                    Console.WriteLine($"Data de nascimento: {r.GetDateTime(5).ToShortDateString()}");
+                    Console.WriteLine();
+                }
+                conn.Close();
+                return true;
             }
             catch (SqlException e)
             {
                 Console.WriteLine("Erro código " + e.Number + "Contate o administrador");
             }
+            conn.Close();
+            return false;
+        }
+
+        public bool SelectTablePessoaInativa(string sql)
+        {
+            try
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                SqlDataReader r = cmd.ExecuteReader();
+
+                if (!r.HasRows)
+                {
+                    Console.WriteLine("Usuário não localizado!!!\nOperação cancelada...");
+                    conn.Close();
+                    Utils.Pause();
+                    return false;
+                }
+
+                while (r.Read())
+                {
+                    Console.WriteLine($"Nome: {r.GetString(1)}");
+                    Console.WriteLine($"CPF: {r.GetString(0)}");
+                    Console.WriteLine($"Sexo: {r.GetString(2)}");
+                    Console.WriteLine($"Tel: {r.GetString(3)}");
+                    Console.WriteLine($"Endereço: {r.GetString(4)}");
+                    Console.WriteLine($"Data de nascimento: {r.GetDateTime(5).ToShortDateString()}");
+                    if (r.GetString(6)[0] == 'I') Console.WriteLine($"Status Cadastro: Inativo");
+                    else Console.WriteLine($"Status Cadastro: Ativo");
+                    Console.WriteLine();
+                }
+                conn.Close();
+                return true;
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("Erro código " + e.Number + "Contate o administrador");
+            }
+            conn.Close();
             return false;
         }
 
@@ -119,6 +156,7 @@ namespace ProjectOngAnimais
             {
                 Console.WriteLine("Erro código " + e.Number + "Contate o administrador");
             }
+            conn.Close();
             return row;
         }
 
@@ -152,7 +190,7 @@ namespace ProjectOngAnimais
                 {
                     if (!r.HasRows)
                     {
-                        Console.WriteLine("Pet não localizado...");
+                        Console.WriteLine("Não há éts cadastrados compativeis com a solicitação");
                         Utils.Pause();
                         conn.Close();
                         return false;
@@ -190,6 +228,7 @@ namespace ProjectOngAnimais
                 if (e.Number == 2627) Console.WriteLine("Cadastro já efetuado");
                 else Console.WriteLine("Erro código " + e.Number + "Contate o administrador");
             }
+            conn.Close();
             return row;
         }
 
@@ -218,6 +257,7 @@ namespace ProjectOngAnimais
                             Console.WriteLine($"Tipo do pet: {r.GetString(3)}");
                             Console.WriteLine($"Raça do pet: {r.GetString(4)}");
                             Console.WriteLine($"Data de adoção: {r.GetDateTime(5).ToShortDateString()}");
+                            Console.WriteLine();
                         }
                     }
                 }
@@ -226,6 +266,7 @@ namespace ProjectOngAnimais
             {
                 Console.WriteLine("Erro código " + e.Number + "Contate o administrador");
             }
+            conn.Close();
             return row;
         }
     }
