@@ -6,6 +6,7 @@ Consiste em desenvolver um projeto para uma ong de adoção de animais, permitin
 Pode-se também efetuar consultas a respeito de pessoas, animais e registros de adoção e inativar cadastros de pessoas.
 
 MELHORIAS EM ANDAMENTO
+
 Está sendo desenvolvido uma tabela endereço para associação com a pessoa.
 
 Bugs e sugestões enviar email para: alexandre.betassa.souza@hotmail.com ou deixar comentário no Issues do repositório.
