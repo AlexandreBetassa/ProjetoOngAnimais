@@ -14,11 +14,14 @@ namespace ProjectOngAnimais
         public String Nome { get; set; }
         public Char Sexo { get; set; }
         public String Telefone { get; set; }
-        public String End { get; set; }
+        public Endereco End { get; set; }
         public Char Status { get; set; }
         public DateTime DataNascimento { get; set; }
 
-        public Pessoa() { }
+        public Pessoa()
+        {
+            End = new Endereco();
+        }
 
         public void CadastrarPessoa()
         {
@@ -44,10 +47,11 @@ namespace ProjectOngAnimais
                 else break;
             } while (true);
 
-            End = Utils.ColetarString("Informe seu endereço completo: ");
             Telefone = Utils.ColetarString("Informe o número do teledone com DDD: ").Replace("(", "").Replace("-", "").Replace(")", "");
+            End.CadastrarEndereco();
             Status = 'A';
             db.InsertTablePessoa(this);
+            db.InsertTableEndereco(this.Cpf, this.End);
         }
 
         public static void EditarCadastroPessoa()
@@ -78,7 +82,7 @@ namespace ProjectOngAnimais
                     db.UpdateTable(sql);
                     return;
                 case 3:
-                    string end = Utils.ColetarString("Informe o novo endereço: ");
+                    string end = Utils.ColetarString("Informe o novo endereço completo: ");
                     sql = $"update dbo.pessoa set endereco = '{end}' where cpf = '{cpf}'";
                     db.UpdateTable(sql);
                     return;

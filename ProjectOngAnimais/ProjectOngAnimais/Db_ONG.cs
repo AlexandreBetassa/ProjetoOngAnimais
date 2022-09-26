@@ -25,12 +25,10 @@ namespace ProjectOngAnimais
             try
             {
                 conn.Open();
-                string sql = $"insert into dbo.pessoa (cpf, nome, sexo, telefone, endereco, dataNascimento, status) values ('{pessoa.Cpf}' , " +
-                    $"'{pessoa.Nome}', '{pessoa.Sexo}', '{pessoa.Telefone}', '{pessoa.End}', '{pessoa.DataNascimento}', '{pessoa.Status}');";
+                string sql = $"insert into dbo.pessoa (cpf, nome, sexo, telefone, dataNascimento, status) values ('{pessoa.Cpf}' , " +
+                    $"'{pessoa.Nome}', '{pessoa.Sexo}', '{pessoa.Telefone}', '{pessoa.DataNascimento}', '{pessoa.Status}');";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 row = cmd.ExecuteNonQuery();
-                Console.WriteLine(row);
-                Console.ReadKey();
             }
             catch (SqlException e)
             {
@@ -48,6 +46,26 @@ namespace ProjectOngAnimais
                 Utils.Pause();
             }
             conn.Close();
+        }
+
+        public int InsertTableEndereco(String cpf, Endereco endereco)
+        {
+            int row = 0;
+            try
+            {
+                conn.Open();
+                string sql = $"insert into dbo.endereco (cpf, logradouro, numero, bairro, complemento, cep, cidade, uf)" +
+                    $"values('{cpf}', '{endereco.Logradouro}', '{endereco.Numero}', '{endereco.Bairro}', '{endereco.Complemento}', '{endereco.Cep}', '{endereco.Cidade}', '{endereco.UF}');";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                row = cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("Erro código " + e.Number + "Contate o administrador");
+                conn.Close();
+            }
+            return row;
         }
 
         public bool SelectTablePessoa(string sql)
@@ -72,8 +90,8 @@ namespace ProjectOngAnimais
                     Console.WriteLine($"CPF: {r.GetString(0)}");
                     Console.WriteLine($"Sexo: {r.GetString(2)}");
                     Console.WriteLine($"Tel: {r.GetString(3)}");
-                    Console.WriteLine($"Endereço: {r.GetString(4)}");
                     Console.WriteLine($"Data de nascimento: {r.GetDateTime(5).ToShortDateString()}");
+                    //SelectTableEndereco(r.GetString(0));
                     Console.WriteLine();
                 }
                 conn.Close();
@@ -87,6 +105,28 @@ namespace ProjectOngAnimais
             return false;
         }
 
+        public void SelectTableEndereco(string cpf, SqlConnection conn)
+        {
+            string sql = $"select logradouro, numero, bairro, complemento, cep, cidade, uf from dbo.endereco where cpf = {cpf}";
+            conn.Open();
+            try
+            {
+                SqlCommand cmdEnd = new SqlCommand(sql, conn);
+                SqlDataReader r = cmdEnd.ExecuteReader();
+                while (r.Read())
+                {
+                    Console.WriteLine($"Rua/Av.: {r.GetString(0)}, N°: {r.GetInt32(1)}, {r.GetString(2)}, {r.GetString(3)}, {r.GetString(4)} - {r.GetString(5)}, " +
+                        $"{r.GetString(6)}");
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("Erro código " + e.Number + " .Contate o administrador!");
+            }
+            //conn.Close();
+            return;
+        }
+
         public bool SelectTablePessoaInativa(string sql)
         {
             try
@@ -94,7 +134,6 @@ namespace ProjectOngAnimais
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 SqlDataReader r = cmd.ExecuteReader();
-
                 if (!r.HasRows)
                 {
                     Console.WriteLine("Usuário não localizado!!!\nOperação cancelada...");
@@ -109,13 +148,12 @@ namespace ProjectOngAnimais
                     Console.WriteLine($"CPF: {r.GetString(0)}");
                     Console.WriteLine($"Sexo: {r.GetString(2)}");
                     Console.WriteLine($"Tel: {r.GetString(3)}");
-                    Console.WriteLine($"Endereço: {r.GetString(4)}");
                     Console.WriteLine($"Data de nascimento: {r.GetDateTime(5).ToShortDateString()}");
                     if (r.GetString(6)[0] == 'I') Console.WriteLine($"Status Cadastro: Inativo");
                     else Console.WriteLine($"Status Cadastro: Ativo");
-                    Console.WriteLine();
                 }
                 conn.Close();
+                Console.WriteLine();
                 return true;
             }
             catch (SqlException e)

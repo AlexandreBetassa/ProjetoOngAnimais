@@ -21,7 +21,7 @@ namespace ProjectOngAnimais
 
         }
 
-        public void CadastrarEndereco()
+        public Endereco CadastrarEndereco()
         {
             Logradouro = Utils.ColetarString("Informe logradouro: ");
             Numero = Utils.ColetarValorInt("Informe número: ");
@@ -32,10 +32,16 @@ namespace ProjectOngAnimais
             UF = Utils.ColetarString("Informe o estado onde reside: ");
             do
             {
-                Cep = Utils.ColetarString("Informe o CEP [xxxxx-xxx]: ");
-                if (Cep.Length != 9) Console.WriteLine("Cep inválido. Informe no formato indicado!");
+                Cep = Utils.ColetarString("Informe o CEP (Somente numeros): ");
+                if (Cep.Length != 8) Console.WriteLine("Cep inválido. Informe no formato indicado!");
                 else break;
             } while (true);
+            return (this);
+        }
+
+        public override string ToString()
+        {
+            return $"Rua/Av.: {Logradouro}, N°: {Numero}, Bairro: {Bairro}, Complemento: {Complemento}, Cidade: {Cidade} - {UF}, CEP: {Cep}".ToString();
         }
     }
 }

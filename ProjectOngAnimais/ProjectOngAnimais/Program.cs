@@ -86,7 +86,7 @@ namespace ProjectOngAnimais
                     case 6:
                         Console.Clear();
                         string cpf;
-                        do cpf = Utils.ColetarString("Informe o CPF a ser reativado: ");
+                        do cpf = Utils.ColetarString("Informe o CPF: ");
                         while (!Utils.ValidarCpf(cpf));
                         BuscarCadastro(cpf);
                         Utils.Pause();
